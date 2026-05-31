@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ flow.name }}{% endblock %}
+{% block nav_flows %}active{% endblock %}
+
+{% block content %}
+<p class="muted"><a href="/">← Back to flows</a></p>
+<h1>{{ flow.name }} <span class="pill {{ flow.trigger_type }}">{{ flow.trigger_type }}</span></h1>
+<p class="subtitle">{{ flow.description }}</p>
+
+<div class="row">
+  <div class="card">
+    <h3 style="margin-top:0">Trigger</h3>
+    <div class="kv">
+      <div class="k">Type</div><div>{{ flow.trigger_type }}</div>
+      {% if flow.trigger_type == 'schedule' %}
+      <div class="k">Interval</div><div>every {{ flow.trigger_config.interval_seconds }}s (demo)</div>
+      {% elif flow.trigger_type == 'webhook' %}
+      <div class="k">Webhook</div><div><code>POST /hooks/{{ flow.trigger_config.webhook_key }}</code></div>
+      {% else %}
+      <div class="k">Run</div><div>manually (button →) or via API</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Run this flow</h3>
+    <p class="muted">Executes every step through the mock connectors and records a run.</p>
+    <form method="post" action="/flows/{{ flow.id }}/run">
+      <button class="btn btn-primary" type="submit">▶ Run now</button>
+    </form>
+  </div>
+</div>
+
+<h2>Steps</h2>
+<div class="card">
+  <div class="steps">
+    {% for s in steps %}
+    {% set cfg = s.config | pretty %}
+    <div class="step">
+      <div class="rail">
+        <div class="dot">{{ connectors[s.connector].emoji if s.connector in connectors else '🔌' }}</div>
+        {% if not loop.last %}<div class="line"></div>{% endif %}
+      </div>
+      <div class="body">
+        <div class="title">{{ loop.index }}. {{ s.name }}</div>
+        <div class="sub">
+          {{ connectors[s.connector].label if s.connector in connectors else s.connector }}
+          · action <code>{{ s.action }}</code>
+          <span class="pill mock">MOCK</span>
+        </div>
+        <div class="params">{{ cfg }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<h2>Run history</h2>
+<table>
+  <thead><tr><th>Run</th><th>Trigger</th><th>Status</th><th>Duration</th><th>Started</th></tr></thead>
+  <tbody>
+  {% for r in runs %}
+    <tr onclick="location.href='/runs/{{ r.id }}'" style="cursor:pointer">
+      <td>#{{ r.id }}</td>
+      <td><span class="pill {{ r.trigger_source }}">{{ r.trigger_source }}</span></td>
+      <td><span class="pill {{ r.status }}">{{ r.status }}</span></td>
+      <td>{{ r.duration_ms or 0 }} ms</td>
+      <td class="muted">{{ r.started_at.replace("T", " ")[:16] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">No runs yet — hit “Run now”.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

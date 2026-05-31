@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Run #{{ run.id }}{% endblock %}
+{% block nav_runs %}active{% endblock %}
+
+{% block content %}
+<p class="muted"><a href="/runs">← Back to runs</a> · <a href="/flows/{{ run.flow_id }}">{{ run.flow_name }}</a></p>
+<h1>Run #{{ run.id }} <span class="pill {{ run.status }}">{{ run.status }}</span></h1>
+<p class="subtitle">
+  {{ run.flow_name }} · triggered via
+  <span class="pill {{ run.trigger_source }}">{{ run.trigger_source }}</span>
+  · {{ run.duration_ms or 0 }} ms · started {{ run.started_at.replace("T", " ")[:19] }}
+</p>
+
+<div class="card">
+  <h3 style="margin-top:0">Trigger payload</h3>
+  <pre>{{ run.trigger_payload | pretty }}</pre>
+</div>
+
+<h2>Per-step logs</h2>
+{% for l in logs %}
+<div class="log">
+  <div class="head">
+    <div class="pos">{{ l.position }}</div>
+    <div class="name">{{ l.step_name }}</div>
+    <span class="muted">{{ l.connector }}.{{ l.action }}</span>
+    <span class="pill {{ l.status }}">{{ l.status }}</span>
+    <span class="pill mock">MOCK</span>
+    <div class="meta">{{ l.duration_ms }} ms</div>
+  </div>
+  <div class="io">
+    <div><h4>Input (resolved)</h4><pre>{{ l.input | pretty }}</pre></div>
+    <div><h4>Output</h4><pre>{{ l.output | pretty }}</pre></div>
+  </div>
+</div>
+{% else %}
+<p class="muted">No step logs recorded for this run.</p>
+{% endfor %}
+{% endblock %}

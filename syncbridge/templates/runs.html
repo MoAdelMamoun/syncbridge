@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Runs{% endblock %}
+{% block nav_runs %}active{% endblock %}
+
+{% block content %}
+<h1>Run history</h1>
+<p class="subtitle">Every flow execution, newest first. All runs went through mock connectors.</p>
+
+<table>
+  <thead><tr><th>Run</th><th>Flow</th><th>Trigger</th><th>Status</th><th>Duration</th><th>Started</th></tr></thead>
+  <tbody>
+  {% for r in runs %}
+    <tr onclick="location.href='/runs/{{ r.id }}'" style="cursor:pointer">
+      <td>#{{ r.id }}</td>
+      <td>{{ r.flow_name }}</td>
+      <td><span class="pill {{ r.trigger_source }}">{{ r.trigger_source }}</span></td>
+      <td><span class="pill {{ r.status }}">{{ r.status }}</span></td>
+      <td>{{ r.duration_ms or 0 }} ms</td>
+      <td class="muted">{{ r.started_at.replace("T", " ")[:16] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">No runs yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

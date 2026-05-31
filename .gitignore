@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+
+# Env / secrets
+.env
+.env.local
+.env*.local
+
+# SQLite demo database (regenerated on first run)
+*.db
+*.sqlite
+*.sqlite3
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/

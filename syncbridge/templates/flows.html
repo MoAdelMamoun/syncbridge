@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Flows{% endblock %}
+{% block nav_flows %}active{% endblock %}
+
+{% block content %}
+<h1>Flows</h1>
+<p class="subtitle">Automation workflows. Each runs end-to-end through <strong>mock connectors</strong> — no real API calls. All fictional demo data.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">Flows</div><div class="value">{{ stats.flows }}</div></div>
+  <div class="kpi"><div class="label">Runs today</div><div class="value">{{ stats.runs_today }}</div></div>
+  <div class="kpi"><div class="label">Total runs</div><div class="value">{{ stats.total_runs }}</div></div>
+  <div class="kpi"><div class="label">Success rate</div><div class="value">{{ stats.success_rate }}%</div></div>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Flow</th><th>Trigger</th><th>Steps</th><th>Runs</th><th>Status</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for f in flows %}
+    <tr onclick="location.href='/flows/{{ f.id }}'" style="cursor:pointer">
+      <td><strong>{{ f.name }}</strong><div class="muted">{{ f.description }}</div></td>
+      <td><span class="pill {{ f.trigger_type }}">{{ f.trigger_type }}</span></td>
+      <td>{{ f.step_count }}</td>
+      <td>{{ f.run_count }}</td>
+      <td>{{ 'enabled' if f.enabled else 'disabled' }}</td>
+      <td><a class="btn" href="/flows/{{ f.id }}">Open →</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">No flows yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2>Recent runs</h2>
+<table>
+  <thead><tr><th>Run</th><th>Flow</th><th>Trigger</th><th>Status</th><th>Duration</th><th>Started</th></tr></thead>
+  <tbody>
+  {% for r in recent %}
+    <tr onclick="location.href='/runs/{{ r.id }}'" style="cursor:pointer">
+      <td>#{{ r.id }}</td>
+      <td>{{ r.flow_name }}</td>
+      <td><span class="pill {{ r.trigger_source }}">{{ r.trigger_source }}</span></td>
+      <td><span class="pill {{ r.status }}">{{ r.status }}</span></td>
+      <td>{{ r.duration_ms or 0 }} ms</td>
+      <td class="muted">{{ r.started_at.replace("T", " ")[:16] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">No runs yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2>Available connectors</h2>
+<div class="row">
+  {% for key, c in connectors.items() %}
+  <div class="card" style="min-width:200px">
+    <div style="font-size:22px">{{ c.emoji }}</div>
+    <div style="font-weight:600;margin-top:4px">{{ c.label }} <span class="pill mock">MOCK</span></div>
+    <div class="muted">{{ c.description }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2>Demo controls</h2>
+<form method="post" action="/reset" onsubmit="return confirm('Reset all demo data back to the seeded sample?')">
+  <button class="btn btn-danger" type="submit">Reset demo data</button>
+</form>
+{% endblock %}
