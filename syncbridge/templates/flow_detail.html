@@ -13,7 +13,7 @@
     <div class="kv">
       <div class="k">Type</div><div>{{ flow.trigger_type }}</div>
       {% if flow.trigger_type == 'schedule' %}
-      <div class="k">Interval</div><div>every {{ flow.trigger_config.interval_seconds }}s (demo)</div>
+      <div class="k">Interval</div><div>every {{ flow.trigger_config.interval_seconds }}s</div>
       {% elif flow.trigger_type == 'webhook' %}
       <div class="k">Webhook</div><div><code>POST /hooks/{{ flow.trigger_config.webhook_key }}</code></div>
       {% else %}

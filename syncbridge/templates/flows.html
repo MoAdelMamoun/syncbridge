@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Flows</h1>
-<p class="subtitle">Automation workflows. Each runs end-to-end through <strong>mock connectors</strong> — no real API calls. All fictional demo data.</p>
+<p class="subtitle">Automation workflows. Each runs end-to-end through <strong>mock connectors</strong> — no real API calls. All flows and data are fictional.</p>
 
 <div class="kpis">
   <div class="kpi"><div class="label">Flows</div><div class="value">{{ stats.flows }}</div></div>
@@ -63,8 +63,8 @@
   {% endfor %}
 </div>
 
-<h2>Demo controls</h2>
-<form method="post" action="/reset" onsubmit="return confirm('Reset all demo data back to the seeded sample?')">
-  <button class="btn btn-danger" type="submit">Reset demo data</button>
+<h2>Sample data</h2>
+<form method="post" action="/reset" onsubmit="return confirm('Reset all data back to the seeded sample?')">
+  <button class="btn btn-danger" type="submit">Reset sample data</button>
 </form>
 {% endblock %}

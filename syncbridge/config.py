@@ -27,6 +27,3 @@ LIVE_CONNECTORS = os.getenv("SYNCBRIDGE_LIVE_CONNECTORS", "false").lower() == "t
 # Whether to start APScheduler with the app (on by default so the dashboard
 # shows fresh scheduled runs). Disabled automatically by the smoke test.
 ENABLE_SCHEDULER = os.getenv("SYNCBRIDGE_ENABLE_SCHEDULER", "true").lower() == "true"
-
-# Shown on every page so the demo can never be mistaken for a live deployment.
-DEMO_BANNER = "Demo — mock connectors, no real API calls. All flows and data are fictional."

@@ -53,7 +53,6 @@ def _shutdown() -> None:
 def _ctx(request: Request, **extra) -> dict:
     base = {
         "request": request,
-        "demo_banner": config.DEMO_BANNER,
         "connectors": connectors.CONNECTORS,
     }
     base.update(extra)
